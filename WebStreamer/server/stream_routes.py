@@ -14,10 +14,14 @@ routes = web.RouteTableDef()
 
 @routes.get("/", allow_head=True)
 async def root_route_handler(request):
-    return web.json_response({"status": "running",
-                              "maintained_by": "Avishkar_Patil",
-                              "uptime": get_readable_time(time.time() - StartTime),
-                              "telegram_bot": '@'+(await StreamBot.get_me()).username})
+    return web.json_response(
+        {
+            "status": "running",
+            "maintained_by": "Avishkar_Patil",
+            "uptime": get_readable_time(time.time() - StartTime),
+            "telegram_bot": f'@{(await StreamBot.get_me()).username}',
+        }
+    )
 
 
 @routes.get("/{message_id}")
@@ -54,10 +58,8 @@ async def media_streamer(request, message_id: int):
     body = TGCustomYield().yield_file(media_msg, offset, first_part_cut, last_part_cut, part_count,
                                       new_chunk_size)
 
-    file_name = file_properties.file_name if file_properties.file_name \
-        else f"{secrets.token_hex(2)}.jpeg"
-    mime_type = file_properties.mime_type if file_properties.mime_type \
-        else f"{mimetypes.guess_type(file_name)}"
+    file_name = file_properties.file_name or f"{secrets.token_hex(2)}.jpeg"
+    mime_type = file_properties.mime_type or f"{mimetypes.guess_type(file_name)}"
 
     return_resp = web.Response(
         status=206 if range_header else 200,
