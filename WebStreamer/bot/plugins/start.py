@@ -126,8 +126,8 @@ async def start(b, m):
             disable_web_page_preview=True,
             reply_markup=START_BUTTONS
               )                                                                         
-                                                                                       
-                                                                            
+
+
     else:
         if Var.UPDATES_CHANNEL != "None":
             try:
@@ -178,10 +178,12 @@ async def start(b, m):
         elif get_msg.audio:
             file_name = f"{get_msg.audio.file_name}"
 
-        stream_link = "https://{}/{}".format(Var.FQDN, get_msg.message_id) if Var.ON_HEROKU or Var.NO_PORT else \
-            "http://{}:{}/{}".format(Var.FQDN,
-                                     Var.PORT,
-                                     get_msg.message_id)
+        stream_link = (
+            f"https://{Var.FQDN}/{get_msg.message_id}"
+            if Var.ON_HEROKU or Var.NO_PORT
+            else f"http://{Var.FQDN}:{Var.PORT}/{get_msg.message_id}"
+        )
+
 
         msg_text ="""
 <i><u>𝗬𝗼𝘂𝗿 𝗟𝗶𝗻𝗸 𝗚𝗲𝗻𝗲𝗿𝗮𝘁𝗲𝗱 !</u></i>\n
